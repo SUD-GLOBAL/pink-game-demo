@@ -8,6 +8,7 @@ import {
   HorizontalTextAlignment,
   Label,
   Layers,
+  Mask,
   Node,
   ResolutionPolicy,
   Sprite,
@@ -92,10 +93,13 @@ export class ClickGame extends Component {
     this.scoreLabel = this.makeLabel('ScoreLabel', scoreCard, '得分：0', 36, Color.WHITE, Vec3.ZERO).getComponent(Label)!;
 
     this.target = this.makeNode('Target', fallbackCanvas, 150, 150, TARGET_POSITIONS[0]);
+    // Match the circular mask stored on Target in the normal scene.
+    this.target.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
     const fallback = this.makeNode('TargetFallback', this.target, 150, 150);
     this.drawTarget(fallback);
     const spriteNode = this.makeNode('TargetSprite', this.target, 150, 150);
     const sprite = spriteNode.addComponent(Sprite);
+    sprite.sizeMode = Sprite.SizeMode.CUSTOM;
     spriteNode.active = false;
     this.target.on(Node.EventType.TOUCH_END, this.onTargetClicked, this);
     resources.load('images/pink-target/spriteFrame', SpriteFrame, (error, frame) => {

@@ -1030,6 +1030,9 @@
     "_components": [
       {
         "__id__": 29
+      },
+      {
+        "__id__": 52
       }
     ],
     "_prefab": null,
@@ -1880,5 +1883,21 @@
   {
     "__type__": "cc.PostSettingsInfo",
     "_toneMappingType": 0
+  },
+  {
+    "__type__": "cc.Mask",
+    "_name": "",
+    "_objFlags": 0,
+    "__editorExtras__": {},
+    "node": {
+      "__id__": 25
+    },
+    "_enabled": true,
+    "__prefab": null,
+    "_type": 1,
+    "_inverted": false,
+    "_segments": 64,
+    "_alphaThreshold": 0.1,
+    "_id": "pink-target-circle-mask"
   }
 ]
