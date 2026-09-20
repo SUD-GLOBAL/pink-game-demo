@@ -1,39 +1,56 @@
 # Pink Game Demo
 
-PinK 用户手册配套的 2D 点击得分游戏。官方仓库：[SUD-GLOBAL/pink-game-demo](https://github.com/SUD-GLOBAL/pink-game-demo)。
+A small 2D click-to-score game for the PinK user guide. Official repository: [SUD-GLOBAL/pink-game-demo](https://github.com/SUD-GLOBAL/pink-game-demo).
 
-## 打开与运行
+## Open and run
 
-1. 准备 PinK 1.127.0 和 COCOS Creator 3.8.8 对应的引擎环境。
-2. 克隆本仓库，或在 GitHub 选择 **Code → Download ZIP** 并解压。
-3. 在 PinK 中打开包含 `package.json` 和 `assets/` 的项目根目录，等待资源初始化完成。
-4. 打开 `assets/main.scene` 并运行预览。
+1. Install PinK 1.127.0 and an engine environment compatible with COCOS Creator 3.8.8.
+2. Clone this repository, or choose **Code → Download ZIP** on GitHub and extract the archive.
+3. Open the project root containing `package.json` and `assets/` in PinK, then wait for asset initialization to finish.
+4. Open `assets/main.scene` and start the preview.
 
-初始分数为 0。点击粉色目标，每次加 1 分，并沿固定的五个位置循环移动；点击“重新开始”后回到 0 分和初始位置。构建发布时选择 Web Desktop，并将 `assets/main.scene` 设为启动场景，默认输出目录为 `build/web-desktop/`。
+The score starts at 0. Click the pink target to earn 1 point and move it along a fixed cycle of five positions. Select **Restart** to reset the score and target position. To build the game, open **Build & Publish → Native Platform → web desktop**, use `assets/main.scene` as the startup scene, and select **Build**. The default output directory is `build/web-desktop/`.
 
-## 项目内容
+## Project contents
 
-- `assets/main.scene`：包含游戏界面、目标和重置按钮的入口场景。
-- `assets/scripts/ClickGame.ts`：节点绑定、计分、固定路线与重置逻辑。
-- `assets/resources/images/pink-target.png`：目标图片。
-- `assets/animations/target-pulse.anim`：教程使用的目标动画。
+- `assets/main.scene`: the entry scene, including the game interface, target, and restart button.
+- `assets/scripts/ClickGame.ts`: node bindings, scoring, deterministic movement, and reset logic.
+- `assets/resources/images/pink-target.png`: the target image, displayed through a circular mask.
+- `assets/resources/images/rounded-panel.png`: a plain white rounded rectangle, sliced and tinted for the playfield, score card, and button.
+- `assets/animations/target-pulse.anim`: the animation asset used by the guide.
 
-资源旁的 `.meta` 文件及 UUID 必须随资源一起保留。`temp/` 中的 TypeScript 配置由 COCOS 初始化生成，不应手工提交。
+## Edit the scene and gameplay
 
-## 验证与维护
+The complete interface is assembled from COCOS nodes in `assets/main.scene`. Edit layout, colors, images, and static Label text in the scene editor. For example, change the `Label` under `Canvas/ResetButton` to rename the Restart button. `ClickGame.ts` updates the score and target during play; it does not create or draw the interface.
 
-使用 Node.js 22 或更高版本运行静态项目校验，无需安装 npm 依赖：
+Select `GameController` in the Hierarchy. Its `ClickGame` component exposes three Inspector references:
+
+| Property | Scene reference |
+| --- | --- |
+| Score Label | The Label component on `Canvas/ScoreCard/ScoreLabel` |
+| Target | The `Canvas/Target` node |
+| Reset Button | The `Canvas/ResetButton` node |
+
+These references are saved in the scene. Event listeners are attached when the component is enabled and removed when it is disabled. A missing reference reports an English error and disables the component; restore the reference in the Inspector instead of relying on an automatically rebuilt interface.
+
+Keep each asset's `.meta` file and UUID together with the asset. COCOS generates the TypeScript configuration under `temp/`; do not commit generated files.
+
+The root `uuid` identifies the COCOS project; `pink.uuid` identifies it in PinK. They are independently generated UUIDs and do not need to match. Keep these project IDs stable when maintaining this repository. Asset UUIDs are separate and preserve scene references.
+
+## Validation and maintenance
+
+Run the static project checks with Node.js 22 or later. No npm dependencies are required:
 
 ```bash
 npm test
 ```
 
-校验覆盖版本声明、教程资源、场景对象引用、关键节点和确定性逻辑约束；实际游戏运行仍须在 PinK / COCOS 环境中验证。
+The checks cover version declarations, project UUIDs, asset metadata, tutorial resources, scene references, key nodes, English UI labels, and deterministic logic constraints. Verify actual gameplay in PinK / COCOS as well.
 
-运行缓存、依赖和构建产物由 `.gitignore` 排除。游戏代码在本仓库维护；[用户手册仓库](https://github.com/SUD-GLOBAL/pink-docs-public)的自动截图默认读取与其同级的 `pink-game-demo`，也支持 `--demo-dir` 指定路径。截图在临时副本中运行。
+The `.gitignore` excludes dependencies, runtime caches, and build output. Maintain the game code in this repository. The [user guide repository](https://github.com/SUD-GLOBAL/pink-docs-public) captures screenshots from a sibling `pink-game-demo` checkout by default and supports `--demo-dir` for other locations. Screenshot sessions use temporary project copies. The Demo UI and its related screenshots use English; the handbook may explain them in other languages.
 
-## 来源与许可
+## Origin and license
 
-项目从 pink-docs-public 的提交 `ba1f508a18175573aeb40b5fd483d3dd0a405085` 中的 `examples/pink-demo/` 迁入，保留原始游戏行为与资源标识。
+The project was extracted from `examples/pink-demo/` in pink-docs-public commit `ba1f508a18175573aeb40b5fd483d3dd0a405085`. Its game behavior and existing asset identifiers were preserved; subsequent changes update the target image, UI language, light color palette, layout, and project metadata.
 
-本仓库使用 [MIT License](./LICENSE)。
+This repository uses the [MIT License](./LICENSE).
